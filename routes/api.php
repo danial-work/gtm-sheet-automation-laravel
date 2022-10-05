@@ -25,3 +25,5 @@ Route::get('account/{account_id?}','App\Http\Controllers\GTM_call@account');
 Route::get('account/{account_id}/container/{container_id?}','App\Http\Controllers\GTM_call@container');
 
 Route::get('account/{account_id}/container/{container_id}/workspace/{workspace_id?}','App\Http\Controllers\GTM_call@workspace');
+
+Route::post('generate-sheet','App\Http\Controllers\GTM_call@generate_sheet');

@@ -47,14 +47,34 @@ function setup_dropdown(){
             .then((response) => response.json())
             .then((data) => {
                 if(data)
-                {
-                    clear_dropdown('container');
                     append_to_dropdown(data);
-                }
+            })
+            .then(() => {
+                enable_dropdown("container");
+                console.log("GTM container setup completed...");
             });
         });
 
-        // //workspace
+        //workspace
+        $("#GTM-container-dropdown").on("change",function(){
+            console.log("GTM workspace setup...");
+
+            var endpoint_container = "https://"+location.hostname+":20006/api/account/"+$("#GTM-account-dropdown").children(":selected").attr("id")+"/container/"+$(this).children(":selected").attr("id")+"/workspace";
+            console.log("fetch internal api:" + endpoint_container);
+
+            console.log("change workspace...");
+
+            fetch(endpoint_container,{method: "get", headers:{Authorization: cookie_split.ga_at}})
+            .then((response) => response.json())
+            .then((data) => {
+                if(data)
+                    append_to_dropdown(data);
+            })
+            .then(() => {
+                enable_dropdown("workspace");
+                console.log("GTM workspace setup completed...");
+            });
+        });
     }
 }
 
@@ -129,6 +149,12 @@ function append_to_dropdown($json){
             }
             */
             console.log("workspace dropdown edit");
+            $("#GTM-workspace-dropdown").append("<option id='none'> None </option>");
+            $json.workspace.map(e => {
+                console.log(e.name);
+                $("#GTM-workspace-dropdown").append("<option id='"+e.workspaceId+"'>"+e.name+"</option>");
+            });
+            $('#GTM-workspace-dropdown').selectpicker('refresh');
             
             break;
         default:

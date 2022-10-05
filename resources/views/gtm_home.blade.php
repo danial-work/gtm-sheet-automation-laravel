@@ -176,7 +176,7 @@
                                     <label for="GTM-container">Container Selected:</label>
                                 </td>
                                 <td>
-                                    <select class="selectpicker dropdown" id="GTM-container-dropdown" data-live-search="true">
+                                    <select class="selectpicker" id="GTM-container-dropdown" data-live-search="true" disabled>
                                     </select>
                                 </td>
                             </tr>
@@ -185,7 +185,7 @@
                                     <label for="GTM-workspace">Workspace Selected:</label>
                                 </td>
                                 <td>
-                                    <select class="selectpicker dropdown" id="GTM-workspace-dropdown" data-live-search="true">
+                                    <select class="selectpicker" id="GTM-workspace-dropdown" data-live-search="true" disabled>
                                         
                                     </select>
                                 </td>
