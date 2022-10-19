@@ -29,6 +29,10 @@ Route::get('/logout-google', function () {
     return view('auth.google_logout');
 });
 
+Route::get('/new-home', function () {
+    return view('gtm_home_new');
+});
+
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

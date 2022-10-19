@@ -14,8 +14,16 @@ function setup_dropdown(){
         cookie_split[temp[0]] = temp[1];
     });
 
-    if(typeof cookie_split.ga_at !== 'undefined') //if logging worked
+    console.log("unencoded cookie: "+cookie_split.ga_at);
+    console.log("encoded cookie: "+decodeURIComponent(cookie_split.ga_at_encode));
+    console.log("decoded cookie: "+window.atob(decodeURIComponent(cookie_split.ga_at_encode)));
+
+
+    if(typeof cookie_split.ga_at_encode !== 'undefined') //if logging worked
     {
+        let decoded_ga_at = window.atob(decodeURIComponent(cookie_split.ga_at_encode));
+        let construct_obj = {};
+
         alert_popup('#alert-login-success',2000);
 
         // //account
@@ -26,7 +34,7 @@ function setup_dropdown(){
 
         console.log("change acc...");
 
-        fetch(endpoint_account,{method: "get", headers:{Authorization: cookie_split.ga_at}})
+        fetch(endpoint_account,{method: "get", headers:{Authorization: decoded_ga_at}})
         .then((response) => response.json())
         .then((data) => append_to_dropdown(data))
         .then(() => {
@@ -36,50 +44,98 @@ function setup_dropdown(){
 
         //container
         $("#GTM-account-dropdown").on("change",function(){
-            console.log("GTM container setup...");
 
-            var endpoint_container = "https://"+location.hostname+":20006/api/account/"+$(this).children(":selected").attr("id")+"/container";
-            console.log("fetch internal api:" + endpoint_container);
+            disable_dropdown("container");
+            disable_dropdown("workspace");
 
-            console.log("change container...");
+            $("#generate-sheet").addClass("disabled");
 
-            fetch(endpoint_container,{method: "get", headers:{Authorization: cookie_split.ga_at}})
-            .then((response) => response.json())
-            .then((data) => {
-                if(data)
-                    append_to_dropdown(data);
-            })
-            .then(() => {
-                enable_dropdown("container");
-                console.log("GTM container setup completed...");
-            });
+            //insert new gtm-account info
+            construct_obj.account_id = $(this).children(":selected").attr("id");
+
+            if(typeof $(this).children(":selected").attr("id") !== "undefined" && $(this).children(":selected").attr("id") !== "none")
+            {
+                console.log("GTM container setup...");
+
+                var endpoint_container = "https://"+location.hostname+":20006/api/account/"+$(this).children(":selected").attr("id")+"/container";
+                console.log("fetch internal api:" + endpoint_container);
+    
+                console.log("change container...");
+    
+                fetch(endpoint_container,{method: "get", headers:{Authorization: decoded_ga_at}})
+                .then((response) => response.json())
+                .then((data) => {
+                    if(data)
+                        append_to_dropdown(data);
+                })
+                .then(() => {
+                    enable_dropdown("container");
+                    console.log("GTM container setup completed...");
+                });
+            }
         });
 
         //workspace
         $("#GTM-container-dropdown").on("change",function(){
-            console.log("GTM workspace setup...");
 
-            var endpoint_container = "https://"+location.hostname+":20006/api/account/"+$("#GTM-account-dropdown").children(":selected").attr("id")+"/container/"+$(this).children(":selected").attr("id")+"/workspace";
-            console.log("fetch internal api:" + endpoint_container);
+            disable_dropdown("workspace");
 
-            console.log("change workspace...");
+            $("#generate-sheet").addClass("disabled");
 
-            fetch(endpoint_container,{method: "get", headers:{Authorization: cookie_split.ga_at}})
-            .then((response) => response.json())
-            .then((data) => {
-                if(data)
-                    append_to_dropdown(data);
-            })
-            .then(() => {
-                enable_dropdown("workspace");
-                console.log("GTM workspace setup completed...");
-            });
+            //insert new gtm-container info
+            construct_obj.container_id = $(this).children(":selected").attr("id");
+
+            if(typeof $(this).children(":selected").attr("id") !== "undefined" && $(this).children(":selected").attr("id") !== "none")
+            {
+                console.log("GTM workspace setup...");
+
+                var endpoint_container = "https://"+location.hostname+":20006/api/account/"+$("#GTM-account-dropdown").children(":selected").attr("id")+"/container/"+$(this).children(":selected").attr("id")+"/workspace";
+                console.log("fetch internal api:" + endpoint_container);
+
+                console.log("change workspace...");
+
+                fetch(endpoint_container,{method: "get", headers:{Authorization: decoded_ga_at}})
+                .then((response) => response.json())
+                .then((data) => {
+                    if(data)
+                        append_to_dropdown(data);
+                })
+                .then(() => {
+                    enable_dropdown("workspace");
+                    console.log("GTM workspace setup completed...");
+                });
+            }
+            else
+            {
+                console.log("container id invalid");
+            }
+        });
+
+        $("#GTM-workspace-dropdown").on("change",function(){
+            $("#generate-sheet").addClass("disabled");
+
+            //insert new gtm-workspace info
+            construct_obj.workspace_id = $(this).children(":selected").attr("id");
+
+            if(typeof $(this).children(":selected").attr("id") !== "undefined" && $(this).children(":selected").attr("id") !== "none")
+            {
+                $("#generate-sheet").removeClass("disabled");
+                console.log(construct_obj);
+            }
         });
     }
 }
 
 function enable_dropdown(id){
     $('select#GTM-'+id+"-dropdown").prop("disabled", false);
+    // $("#GTM-" + id + "-dropdown").empty();
+    // $('.selectpicker').selectpicker('refresh');
+    clear_dropdown(id);
+}
+
+function disable_dropdown(id){
+    $("select#GTM-"+id+"-dropdown").empty();
+    $("select#GTM-"+id+"-dropdown").attr("disabled", true);
     // $("#GTM-" + id + "-dropdown").empty();
     // $('.selectpicker').selectpicker('refresh');
     clear_dropdown(id);
@@ -171,7 +227,6 @@ function clear_dropdown(selected_to_clear)
 
     if(predefined_val.includes(selected_to_clear))
     {
-        // $("#GTM-" + selected_to_clear + "-dropdown").empty();
         $("select#GTM-" + selected_to_clear + "-dropdown").selectpicker("destroy");
         $("select#GTM-" + selected_to_clear + "-dropdown").selectpicker({
             zIndex:1,
