@@ -4,6 +4,6 @@
         header('location:'.$google_client->createAuthUrl());
     }
     else {
-        header('location:/');
+        header('location:/new-home');
     }
 ?>

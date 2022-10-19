@@ -220,6 +220,24 @@ function append_to_dropdown($json){
     }
 }
 
+function start_load()
+{
+    $("#loading-item").addClass('d-flex');
+    $("#loading-item").removeClass('d-none');
+    $(".loader").css("opacity",1);
+    $("body").addClass("overflow-hidden");
+}
+
+function end_load()
+{
+    $(".loader").css("opacity",0);
+    setTimeout(() => {
+        $("#loading-item").removeClass('d-flex');
+        $("#loading-item").addClass('d-none');
+    },750);
+    $("body").removeClass("overflow-hidden");
+}
+
 function clear_dropdown(selected_to_clear)
 {
     var predefined_val = ['account','container','workspace'];

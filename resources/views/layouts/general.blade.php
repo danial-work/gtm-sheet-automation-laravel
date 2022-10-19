@@ -10,74 +10,19 @@
         <!-- Styles -->
         <link href="{{ isSecure() ? secure_asset('css/app.css') : asset('css/app.css') }}" rel="stylesheet">
         <style>
-            .loading-spinner
-            {
-                opacity:0;
+            .loader {
+                background-color: rgba(255,255,255,0.75);
+                height: 95%;
+                width: 100%;
+                opacity:1;
+                z-index: 5;
+                -webkit-transition: all 0.75s;
+                transition:all 0.75s;
             }
 
             .alert {
-                display:none
-            }
-
-            .spinner {
-                display: block;
-                position: fixed;
-                z-index: -1; /* High z-index so it is on top of the page */ 
-                top: 50%;
-                right: 50%; /* or: left: 50%; */
-                margin-top: -..px; /* half of the elements height */
-                margin-right: -..px; /* half of the elements widht */
-            }
-
-            .spinner-container{
-                background-color: rgba(0, 0, 0, 0.2);
-                z-index: -1;
-                width: 100%;
-                height: 100vh;
-                position: fixed;
-                top:0;
-                left:0;
-            }
-
-            .loader {
-                ;border: 8px solid #f3f3f3; /* Light grey */
-                border-top: 8px solid #333333; /* Blue */
-                border-radius: 50%;
-                width: 50px;
-                height: 50px;
-                animation: spin 0.9s linear infinite
-            }
-
-            p{
-                display:inline;
-            }
-
-            .heading-1{
-                position:relative;
-                text-align: center
-            }
-
-            .heading-1:before {
-                content: "";
-                display: block;
-                border-top: solid 2px #bebebe;
-                width: 100%;
-                height: 2px;
-                position: absolute;
-                top: 50%;
-                z-index: 0;
-            }
-            
-            .heading-1 span {
-                background: #fff;
-                padding: 0 10px;
-                position: relative;
-                z-index: 1;
-            }
-
-            @keyframes spin {
-                0% { transform: rotate(0deg); }
-                100% { transform: rotate(360deg); }
+                display:none;
+                z-index: 10;
             }
         </style>
 
@@ -90,7 +35,7 @@
 
     </head>
 
-    <body>
+    <body class="overflow-hidden">
 
     @yield('content')
 

@@ -7,7 +7,7 @@ $strJsonFileContents = json_decode(file_get_contents(base_path()."/secret/client
 // init configuration
 $clientID = $strJsonFileContents->web->client_id;
 $clientSecret = $strJsonFileContents->web->client_secret;
-$redirectUri = "https://pc-83.ad.kasatria.com:20006"; // $strJsonFileContents->web->redirect_uris[0];
+$redirectUri = "https://pc-83.ad.kasatria.com:20006/new-home"; // $strJsonFileContents->web->redirect_uris[0];
 
 //Make object of Google API Client for call Google API
 $google_client = new Google_Client();

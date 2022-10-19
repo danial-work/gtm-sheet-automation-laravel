@@ -17,8 +17,12 @@ Route::get('/laravel', function () {
     return view('welcome');
 });
 
+// Route::get('/', function () {
+//     return view('gtm_home');
+// });
+
 Route::get('/', function () {
-    return view('gtm_home');
+    return view('gtm_home_new');
 });
 
 Route::get('/login-google', function () {
@@ -35,4 +39,6 @@ Route::get('/new-home', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', function () {
+    return redirect('/');
+});
