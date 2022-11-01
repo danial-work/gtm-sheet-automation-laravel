@@ -22,7 +22,7 @@ Route::get('/laravel', function () {
 // });
 
 Route::get('/', function () {
-    return view('gtm_home_new');
+    return redirect('/new-home');
 });
 
 Route::get('/login-google', function () {

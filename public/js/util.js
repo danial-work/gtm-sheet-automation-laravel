@@ -4,6 +4,7 @@ $(".selectpicker").selectpicker({
     width:'400px'
 });
 $('.selectpicker').selectpicker('refresh');
+console.log("refresh...");
 
 function setup_dropdown(){
     let cookie = document.cookie.split("; ");
@@ -52,8 +53,10 @@ function setup_dropdown(){
 
             //insert new gtm-account info
             construct_obj.account_id = $(this).children(":selected").attr("id");
+            construct_obj.container_id=undefined;
+            construct_obj.workspace_id=undefined;
 
-            if(typeof $(this).children(":selected").attr("id") !== "undefined" && $(this).children(":selected").attr("id") !== "none")
+            if(typeof $(this).children(":selected").attr("id") !== "undefined")
             {
                 console.log("GTM container setup...");
 
@@ -84,8 +87,9 @@ function setup_dropdown(){
 
             //insert new gtm-container info
             construct_obj.container_id = $(this).children(":selected").attr("id");
+            construct_obj.workspace_id=undefined;
 
-            if(typeof $(this).children(":selected").attr("id") !== "undefined" && $(this).children(":selected").attr("id") !== "none")
+            if(typeof $(this).children(":selected").attr("id") !== "undefined")
             {
                 console.log("GTM workspace setup...");
 
@@ -117,12 +121,29 @@ function setup_dropdown(){
             //insert new gtm-workspace info
             construct_obj.workspace_id = $(this).children(":selected").attr("id");
 
-            if(typeof $(this).children(":selected").attr("id") !== "undefined" && $(this).children(":selected").attr("id") !== "none")
+            if(typeof $(this).children(":selected").attr("id") !== "undefined")
             {
                 $("#generate-sheet").removeClass("disabled");
                 console.log(construct_obj);
             }
         });
+
+        $("#generate-sheet").on("click",function(){
+            if(typeof construct_obj.account_id !== "undefined" && typeof construct_obj.container_id !== "undefined" && typeof construct_obj.workspace_id !== "undefined")
+            {
+                console.log("yay");
+                generate_sheet(construct_obj,decoded_ga_at);
+            }
+            else
+            {
+                $("#generate-sheet").addClass("disabled");
+                console.log("one/more of the required parameters are undefined, please check the selected id...");
+                console.log(selected_account);
+                console.log(selected_container);
+                console.log(selected_workspace);
+            }
+        });
+        
     }
 }
 
@@ -155,7 +176,7 @@ function append_to_dropdown($json){
             */
             console.log("account dropdown edit");
 
-            $("#GTM-account-dropdown").append("<option id='none'> None </option>");
+            $("#GTM-account-dropdown").append("<option> None </option>");
             $json.account.map(e => {
                 console.log(e.name);
                 $("#GTM-account-dropdown").append("<option id='"+e.accountId+"'> ("+e.accountId+") "+e.name+"</option>");
@@ -184,7 +205,7 @@ function append_to_dropdown($json){
             */
             console.log("container dropdown edit");
 
-            $("#GTM-container-dropdown").append("<option id='none'> None </option>");
+            $("#GTM-container-dropdown").append("<option> None </option>");
             $json.container.map(e => {
                 console.log(e.name);
                 $("#GTM-container-dropdown").append("<option id='"+e.containerId+"'> ("+e.publicId+") "+e.name+"</option>");
@@ -205,7 +226,7 @@ function append_to_dropdown($json){
             }
             */
             console.log("workspace dropdown edit");
-            $("#GTM-workspace-dropdown").append("<option id='none'> None </option>");
+            $("#GTM-workspace-dropdown").append("<option> None </option>");
             $json.workspace.map(e => {
                 console.log(e.name);
                 $("#GTM-workspace-dropdown").append("<option id='"+e.workspaceId+"'>"+e.name+"</option>");
@@ -265,3 +286,43 @@ function alert_popup(selector, exist_duration=2000, anim_duration=400){
       $(selector).slideUp(anim_duration);
     }, exist_duration);
 }
+
+/**
+ * ga3_tags
+ * @param  {[Object]} GTM_info  {account_id=Number, container_id=Number, workspace_id=Number}
+ * @param  {[String]} key       Google access token=String
+ * @return {Object}             {ga3_tags=[array],ga4_tags=[array]}
+ */
+ async function gtm_tags(GTM_info, key)
+ {
+    let endpoint_container = "https://"+location.hostname+":20006/api/account/"+GTM_info.account_id+"/container/"+GTM_info.container_id+"/workspace/"+GTM_info.workspace_id+"/tags";
+    console.log("fetch internal api:" + endpoint_container);
+
+    let response = await fetch(endpoint_container,{method: "get", headers:{Authorization: key}})
+    .then((response) => response.json())
+    .then((data) => {
+        return data;
+    });
+
+    console.log(response);
+
+    return;
+ }
+
+/**
+ * generate sheet
+ * @param  {[Object]} GTM_info [account_id=1234,container_id=5678,workspace_id=90]
+ * @param  {[String]} key [Google access token]
+ */
+function generate_sheet(GTM_info, key)
+{
+    //prepare ga3 & ga4 tags
+    let obj_gtm_tags = gtm_tags(GTM_info,key);
+
+    //prepare analytics setting variable
+
+    //prepare ga4 configuration tags
+
+    //once completed, create sheet and dump everything
+}
+
