@@ -174,6 +174,50 @@
             </div>
         </div>
     </div>
+    <div class="container border rounded my-3 bg-white">
+        <div class="row py-3">
+            <div class="col-md-12">
+                <h3>
+                    GA4 Developer Guide Automation
+                </h3>
+            </div>
+        </div>
+        <div class="row py-3">
+            <div class="col-md-2 justify-content-center align-self-center">
+                <div>
+                    Google Sheet ID
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="input-group">
+                    <span class="input-group-text bg-white" id="basic-addon3">https://docs.google.com/spreadsheets/d/</span>
+                    <input type="text" class="form-control bg-white" id="inp-dev-guide-id" aria-describedby="basic-addon3">
+                    <span class="input-group-text bg-white" id="basic-addon2">/edit</span>
+                </div>
+            </div>
+        </div>
+        <div class="row py-3">
+            <div class="col-md-2 justify-content-center align-self-center">
+                <div>
+                    Developer Guide Type
+                </div>
+            </div>
+            <div class="col-md-3 justify-content-center align-self-center">
+                <select class="form-select form-select-sm" aria-label=".form-select-sm example" id="inp-dev-guide-type">
+                    <option selected value="none">Select Developer Guide Type</option>
+                    <option value="web">Web</option>
+                    <option value="app">App(Android & iOS)</option>
+                </select>
+            </div>
+        </div>
+        <div class="row mt-3 mb-3">
+            <div class="col-10">
+                <a class="btn btn-outline-dark disabled" href="#" role="button" style="text-transform:none" id="generate-sheet-dev-guide">
+                    Generate Sheet
+                </a>
+            </div>
+        </div>
+    </div>
     <div class="alert alert-success w-50 mt-5 position-absolute top-0 start-50 translate-middle" id="alert-login-success" role="alert">
         You are logged in.
     </div>
@@ -207,7 +251,7 @@
                     }
                     ?>
                 });
-                
+                $.getScript("js/util-dev-guide.js");
             });
         }
     </script>

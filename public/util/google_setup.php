@@ -22,7 +22,7 @@ $google_client->setClientSecret($clientSecret);
 $google_client->setRedirectUri($redirectUri);
  
 //set scope
-$google_client->setScopes(['https://www.googleapis.com/auth/spreadsheets','https://www.googleapis.com/auth/tagmanager.edit.containers']);
+$google_client->setScopes(['https://www.googleapis.com/auth/spreadsheets.readonly','https://www.googleapis.com/auth/tagmanager.readonly','https://www.googleapis.com/auth/presentations']);
 
 //add scope
 $google_client->addScope('email');
